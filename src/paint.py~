@@ -142,7 +142,7 @@ def path_from_image(filename):
     print img
     edges = cv.Canny(img,100,200)
     print edges
-    # print createInstructions(edges)
+    print createInstructions(edges)
     return createInstructions(edges)
     return [
             (DRAW_X, DRAW_Y, DRAW_Z + Z_OFFSET),
@@ -214,7 +214,7 @@ def draw_plan(path):
     poses = []
 
     for point in path:
-	print point
+	
         pose.position.x = point[0]
         pose.position.y = point[1]
         pose.position.z = point[2]
