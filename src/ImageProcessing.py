@@ -1,8 +1,11 @@
 #!/usr/bin/env python
 import cv2 as cv
 # import pyopencv as cv
+import rospy
+import roslib; roslib.load_manifest('artista')
 import numpy as np
 from matplotlib import pyplot as plt
+from artista.msg import *
 
 
 
