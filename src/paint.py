@@ -8,10 +8,6 @@ from smach import State, Sequence
 from clopema_smach import *
 from geometry_msgs.msg import *
 
-import cv2 as cv
-# import pyopencv as cv
-import numpy as np
-
 from matplotlib import pyplot as plt
 
 VISUALIZE=True
@@ -19,6 +15,9 @@ CONFIRM=False
 EXECUTE=True
 
 IMAGE_PATH="/home/teamu/catkin_ws/src/Artista/photos/Testface.jpg"
+
+X_DIMENSION = 50    # The dimensions of the board we write on
+Y_DIMENSION = 50
 
 EXT_POSITION = 0;
 Z_OFFSET = 0.05
@@ -44,97 +43,6 @@ GRAB_ORIENTATION_Y = 1
 
 # define 0 as lower pen
 # define 1 as raise pen
-	
-def createInstructions(image, colour=255):
-	print "createIn"
-	pixels_visited = {}
-	set_of_instructions = []
-	x=0
-	for line in image:
-		
-		y=0
-		# sys.stdout.write(str(i) + ": ")
-		# sys.stdout.flush()
-		for pixel in line:
-			
-			if ((x,y) not in pixels_visited):
-				pixels_visited[(x,y)] = True
-				if(pixel>=colour):
-					set_of_instructions.append((DRAW_X - (x/100.0), DRAW_Y - (y/100.0), DRAW_Z + Z_OFFSET))
-					set_of_instructions.append((DRAW_X - (x/100.0), DRAW_Y - (y/100.0), DRAW_Z))
-					pen_state = 0
-					pen_state = processLine(x, y, set_of_instructions, pen_state, pixels_visited, image, colour)
-					# set_of_instructions.append(instructions)
-			y+=1
-		x+=1
-	return set_of_instructions
-
-def processLine(x, y, instructions, pen_state, pixels_visited, image, colour):
-	
-	pState = pen_state
-	
-	# X #
-	# o #
-	# # #
-	pState = checkDirection(x, y, -1, 0, instructions, pState, pixels_visited, image, colour)
-	
-	# # X
-	# o #
-	# # #
-	pState = checkDirection(x, y, -1, 1, instructions, pState, pixels_visited, image, colour)
-
-
-	# # #
-	# o X
-	# # #
-	pState = checkDirection(x, y, 0, 1, instructions, pState, pixels_visited, image, colour)
-
-	
-	# # #
-	# o #
-	# # X
-	pState = checkDirection(x, y, 1, 1, instructions, pState, pixels_visited, image, colour)
-
-	
-	# # #
-	# o #
-	# X #
-	pState = checkDirection(x, y, 1, 0, instructions, pState, pixels_visited, image, colour)
-
-	
-	# # #
-	# o #
-#	X # #
-	pState = checkDirection(x, y, 1, -1, instructions, pState, pixels_visited, image, colour)
-
-	
-	# # #
-#	X o #
-	# # #
-	pState = checkDirection(x, y, 0, -1, instructions, pState, pixels_visited, image, colour)
-
-	
-#	X # #
-	# o #
-	# # #
-	pState = checkDirection(x, y, -1, -1, instructions, pState, pixels_visited, image, colour)
-
-		
-	if(pState != 1):
-		instructions.append((DRAW_X - (x/100.0), DRAW_Y - (y/100.0), DRAW_Z + Z_OFFSET))
-	return 1
-	
-def checkDirection(x, y, x_direction, y_direction, instructions, pState, pixels_visited, image, colour):
-	if(((x + x_direction, y + y_direction) not in pixels_visited) and image[x + x_direction][y + y_direction]>=colour):
-		if(pState==1):
-			instructions.append((DRAW_X - (x/100.0), DRAW_Y - (y/100.0), DRAW_Z + Z_OFFSET))
-			instructions.append((DRAW_X - (x/100.0), DRAW_Y - (y/100.0), DRAW_Z))
-			pState = 0
-		instructions.append((DRAW_X - ((x + x_direction)/100.0), DRAW_Y - ((y + y_direction)/100.0), DRAW_Z))
-		pixels_visited[(x + x_direction, y + y_direction)] = True
-		pState = processLine(x + x_direction, y + y_direction, instructions, pState, pixels_visited, image, colour)
-	pixels_visited[(x + x_direction, y + y_direction)] = True
-	return pState
 	
 def path_from_image(filename):
     print filename
@@ -215,9 +123,9 @@ def draw_plan(path):
 
     for point in path:
 	print point
-        pose.position.x = point[0]
-        pose.position.y = point[1]
-        pose.position.z = point[2]
+        pose.position.x = point[0] * X_DIMENSION
+        pose.position.y = point[1] * Y_DIMENSION
+        pose.position.z = DRAW_Z if point[2]==0 else DRAW_Z + Z_OFFSET
         poses.append(copy.deepcopy(pose))
 
     sq = smach.Sequence(outcomes=['succeeded', 'preempted', 'aborted'], connector_outcome='succeeded')
