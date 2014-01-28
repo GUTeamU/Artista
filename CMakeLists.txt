@@ -5,7 +5,13 @@ project(artista)
 ## if COMPONENTS list like find_package(catkin REQUIRED COMPONENTS xyz)
 ## is used, also find other catkin packages
 find_package(catkin REQUIRED COMPONENTS
-  clopema_smach
+clopema_smach 
+smach 
+smach_ros 
+rospy 
+tf 
+tf_conversions 
+geometry_msgs 
 )
 
 ## System dependencies are found with CMake's conventions
@@ -44,7 +50,9 @@ find_package(catkin REQUIRED COMPONENTS
 ## Generate messages in the 'msg' folder
  add_message_files(
    FILES
-   Plotter.msg
+    Plotter.msg
+#   Message1.msg
+#   Message2.msg
  )
 
 ## Generate services in the 'srv' folder
@@ -62,16 +70,11 @@ find_package(catkin REQUIRED COMPONENTS
 # )
 
 # Generate added messages and services with any dependencies listed here
-# generate_messages(
-#   DEPENDENCIES
+ generate_messages(
+   DEPENDENCIES
 #   std_msgs  # Or other packages containing msgs
-# )
+ )
 
-# generate_messages(
-#    DEPENDENCIES
-#    std_msgs  # Or other packages containing msgs
-#    artista
-# )
 ###################################
 ## catkin specific configuration ##
 ###################################

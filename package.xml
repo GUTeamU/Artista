@@ -8,6 +8,11 @@
   <!-- Example:  -->
   <!-- <maintainer email="jane.doe@example.com">Jane Doe</maintainer> -->
   <maintainer email="2039411m@student.gla.ac.uk">Edvin Malinovskis</maintainer>
+  <maintainer email="1102103L@student.gla.ac.uk">Fraser Leishman </maintainer>
+  <maintainer email="1102374P@student.gla.ac.uk"> Matthew Paterson </maintainer>
+  <maintainer email="2039411M@student.gla.ac.uk"> Edvin Malinovskis </maintainer>
+  <maintainer email="1003492C@student.gla.ac.uk"> Michael Cromie </maintainer>
+  <maintainer email="1102115M@student.gla.ac.uk"> Andrew McDonald </maintainer>
 
 
   <!-- One license tag required, multiple allowed, one license per tag -->
@@ -40,8 +45,22 @@
   <!-- Use test_depend for packages you need only for testing: -->
   <!--   <test_depend>gtest</test_depend> -->
   <buildtool_depend>catkin</buildtool_depend>
+
   <build_depend>clopema_smach</build_depend>
+  <build_depend>smach </build_depend>
+  <build_depend>smach_ros </build_depend>
+  <build_depend>rospy </build_depend>
+  <build_depend>tf </build_depend>
+  <build_depend>tf_conversions </build_depend>
+  <build_depend>geometry_msgs </build_depend>
+  
   <run_depend>clopema_smach</run_depend>
+  <run_depend>smach </run_depend>
+  <run_depend>smach_ros </run_depend>
+  <run_depend>rospy </run_depend>
+  <run_depend>tf </run_depend>
+  <run_depend>tf_conversions </run_depend>
+  <run_depend>geometry_msgs </run_depend>
 
 
   <!-- The export tag contains other, unspecified, tags -->

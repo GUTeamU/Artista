@@ -8,8 +8,6 @@ from smach import State, Sequence
 from clopema_smach import *
 from geometry_msgs.msg import *
 
-from matplotlib import pyplot as plt
-
 VISUALIZE=True
 CONFIRM=False
 EXECUTE=True
