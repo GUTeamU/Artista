@@ -1,0 +1,21 @@
+cmyip: 130.209.244.53
+ifconfig:
+eth0      Link encap:Ethernet  HWaddr 00:22:19:31:3b:f8  
+          inet addr:130.209.244.53  Bcast:130.209.255.255  Mask:255.255.240.0
+          inet6 addr: fe80::222:19ff:fe31:3bf8/64 Scope:Link
+          UP BROADCAST RUNNING MULTICAST  MTU:1500  Metric:1
+          RX packets:101032 errors:0 dropped:0 overruns:0 frame:0
+          TX packets:8012 errors:0 dropped:0 overruns:0 carrier:0
+          collisions:0 txqueuelen:1000 
+          RX bytes:24215545 (24.2 MB)  TX bytes:1407855 (1.4 MB)
+          Interrupt:16 
+
+lo        Link encap:Local Loopback  
+          inet addr:127.0.0.1  Mask:255.0.0.0
+          inet6 addr: ::1/128 Scope:Host
+          UP LOOPBACK RUNNING  MTU:65536  Metric:1
+          RX packets:1793 errors:0 dropped:0 overruns:0 frame:0
+          TX packets:1793 errors:0 dropped:0 overruns:0 carrier:0
+          collisions:0 txqueuelen:0 
+          RX bytes:280860 (280.8 KB)  TX bytes:280860 (280.8 KB)
+
