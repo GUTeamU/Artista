@@ -1,4 +1,6 @@
 cmyip: 130.209.244.53
+teamviewer: 800 651 137
+pass: teamusawb
 ifconfig:
 eth0      Link encap:Ethernet  HWaddr 00:22:19:31:3b:f8  
           inet addr:130.209.244.53  Bcast:130.209.255.255  Mask:255.255.240.0
