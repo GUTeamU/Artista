@@ -8,6 +8,9 @@ from smach import State, Sequence
 from clopema_smach import *
 from geometry_msgs.msg import *
 
+from rospy.numpy_msg import numpy_msg
+from artista.msg import Plotter
+
 VISUALIZE=True
 CONFIRM=False
 EXECUTE=True
@@ -43,13 +46,6 @@ GRAB_ORIENTATION_Y = 1
 # define 1 as raise pen
 	
 def path_from_image(filename):
-    print filename
-    img = cv.imread(filename,0)
-    print img
-    edges = cv.Canny(img,100,200)
-    print edges
-    # print createInstructions(edges)
-    return createInstructions(edges)
     return [
             (DRAW_X, DRAW_Y, DRAW_Z + Z_OFFSET),
             (DRAW_X, DRAW_Y, DRAW_Z),
@@ -114,16 +110,17 @@ def away_plan():
 
     return sq
 
-def draw_plan(path):
+def draw_plan(data):
     pose = Pose()
     pose.orientation = DRAW_ORIENTATION
     poses = []
+    points = data.data
 
-    for point in path:
-	print point
-        pose.position.x = point[0] * X_DIMENSION
-        pose.position.y = point[1] * Y_DIMENSION
-        pose.position.z = DRAW_Z if point[2]==0 else DRAW_Z + Z_OFFSET
+    for point in points:
+    	print point
+        pose.position.x = point.x * X_DIMENSION
+        pose.position.y = point.y * Y_DIMENSION
+        pose.position.z = DRAW_Z + (Z_OFFSET*point.lift_state)
         poses.append(copy.deepcopy(pose))
 
     sq = smach.Sequence(outcomes=['succeeded', 'preempted', 'aborted'], connector_outcome='succeeded')
@@ -141,31 +138,37 @@ def draw_plan(path):
 
     return sq
 
+def listen():
+    rospy.Subscriber("instructions", numpy_msg(Plotter), draw_plan)
+    rospy.spin()
+
 def main():
     
     rospy.init_node('paint')
+    listen()
 
     sq = Sequence(outcomes=['succeeded', 'aborted', 'preempted'], connector_outcome='succeeded')
     print "HELP"
     with sq:
         Sequence.add('OPEN_GRIPPER', GripperState(2, True), {'succeeded':'TURN', 'aborted':'HOME'})
- 	print "HELP1"
+     	print "HELP1"
         Sequence.add("TURN", ext_plan(), transitions={'aborted':'HOME', 'succeeded':'AWAY'})
-	print "HELP2"
+    	print "HELP2"
         Sequence.add("AWAY", away_plan(), transitions={'aborted':'HOME', 'succeeded':'GRAB'})
-	print "HELP3"
+    	print "HELP3"
         Sequence.add("GRAB", grab_plan(sq), transitions={'aborted':'HOME', 'succeeded':'DRAW'})
-	print "HELP4"
-        Sequence.add("DRAW", draw_plan(path_from_image(IMAGE_PATH)), transitions={'aborted':'HOME', 'succeeded':'RELEASE'})
-	print "HELP5"
+    	print "Ready to draw"
+        while not rospy.is_shutdown():
+            Sequence.add("DRAW", draw_plan(path_from_image(IMAGE_PATH)), transitions={'aborted':'HOME', 'succeeded':'RELEASE'})
+    	print "HELP5"
         Sequence.add("RELEASE", GripperState(2, True), transitions={'aborted':'HOME', 'succeeded':'HOME'})
-	print "HELP6"
+    	print "HELP6"
         # TODO
         # Open hand to release -> HOME
         Sequence.add("HOME", home_plan(), transitions={'aborted':'POWER_OFF'})
-	print "HELP7"
+    	print "HELP7"
         Sequence.add("POWER_OFF", SetServoPowerOffState())
-	print "HELP8"
+    	print "HELP8"
 
 
     sis = smach_ros.IntrospectionServer('paint', sq, '/SM_ROOT')

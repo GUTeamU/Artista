@@ -1,4 +1,4 @@
-uint32 x
-uint32 y
-uint32 lift_state
+float64 x
+float64 y
+float32 lift_state
 
