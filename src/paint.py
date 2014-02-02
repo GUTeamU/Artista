@@ -9,7 +9,7 @@ from clopema_smach import *
 from geometry_msgs.msg import *
 
 from rospy.numpy_msg import numpy_msg
-from artista.msg import Plotter
+from artista.msg import Plot
 
 VISUALIZE=True
 CONFIRM=False
@@ -44,139 +44,141 @@ GRAB_ORIENTATION_Y = 1
 
 # define 0 as lower pen
 # define 1 as raise pen
+instructions = np.array(dtype=Plot)
 	
-def path_from_image(filename):
-    return [
-            (DRAW_X, DRAW_Y, DRAW_Z + Z_OFFSET),
-            (DRAW_X, DRAW_Y, DRAW_Z),
-            (DRAW_X, DRAW_Y - 0.1, DRAW_Z),
-            (DRAW_X - 0.1, DRAW_Y - 0.1, DRAW_Z),
-            (DRAW_X - 0.1, DRAW_Y, DRAW_Z),
-            (DRAW_X, DRAW_Y, DRAW_Z),
-            (DRAW_X, DRAW_Y, DRAW_Z + Z_OFFSET)
-           ]
+def path_from_image(data):
+	for plot in data:
+		instructions.append(plot)
+	# return [
+	# 		(DRAW_X, DRAW_Y, DRAW_Z + Z_OFFSET),
+	# 		(DRAW_X, DRAW_Y, DRAW_Z),
+	# 		(DRAW_X, DRAW_Y - 0.1, DRAW_Z),
+	# 		(DRAW_X - 0.1, DRAW_Y - 0.1, DRAW_Z),
+	# 		(DRAW_X - 0.1, DRAW_Y, DRAW_Z),
+	# 		(DRAW_X, DRAW_Y, DRAW_Z),
+	# 		(DRAW_X, DRAW_Y, DRAW_Z + Z_OFFSET)
+	# 	   ]
 
 
 def grab_plan(sq):
-    
-    pose = PoseStamped()
-    pose.header.frame_id = FRAME_ID
-    pose.pose.position.x = GRAB_X
-    pose.pose.position.y = GRAB_Y
-    pose.pose.position.z = GRAB_Z
-    pose.pose.orientation = DRAW_ORIENTATION
+	
+	pose = PoseStamped()
+	pose.header.frame_id = FRAME_ID
+	pose.pose.position.x = GRAB_X
+	pose.pose.position.y = GRAB_Y
+	pose.pose.position.z = GRAB_Z
+	pose.pose.orientation = DRAW_ORIENTATION
 
-    goals = []
-    goals.append(pose.pose)
+	goals = []
+	goals.append(pose.pose)
 
-    sq.userdata.poses = goals
-    sq.userdata.ik_link = DRAW_HAND_LINK
-    sq.userdata.frame_id = FRAME_ID
-    sq.userdata.offset_plus = Z_OFFSET
-    sq.userdata.offset_minus = Z_OFFSET
+	sq.userdata.poses = goals
+	sq.userdata.ik_link = DRAW_HAND_LINK
+	sq.userdata.frame_id = FRAME_ID
+	sq.userdata.offset_plus = Z_OFFSET
+	sq.userdata.offset_minus = Z_OFFSET
 
-    return gensm_plan_vis_exec(PlanGraspItState(), confirm=CONFIRM, visualize=VISUALIZE, execute=EXECUTE)
+	return gensm_plan_vis_exec(PlanGraspItState(), confirm=CONFIRM, visualize=VISUALIZE, execute=EXECUTE)
 
 def home_plan():
-    return gensm_plan_vis_exec(PlanToHomeState(), confirm=CONFIRM, visualize=VISUALIZE, execute=EXECUTE)
+	return gensm_plan_vis_exec(PlanToHomeState(), confirm=CONFIRM, visualize=VISUALIZE, execute=EXECUTE)
 
 def ext_plan():
-    sq = Sequence(outcomes=['succeeded', 'aborted', 'preempted'], connector_outcome='succeeded')
-    sq.userdata.position = EXT_POSITION;
+	sq = Sequence(outcomes=['succeeded', 'aborted', 'preempted'], connector_outcome='succeeded')
+	sq.userdata.position = EXT_POSITION;
 
-    plan = gensm_plan_vis_exec(PlanExtAxisState(), confirm=CONFIRM, visualize=VISUALIZE, execute=EXECUTE)
-    with sq:
-        Sequence.add("EXTA", plan)
+	plan = gensm_plan_vis_exec(PlanExtAxisState(), confirm=CONFIRM, visualize=VISUALIZE, execute=EXECUTE)
+	with sq:
+		Sequence.add("EXTA", plan)
 
-    return sq
+	return sq
 
 def away_plan():
-    sq = Sequence(outcomes=['succeeded', 'aborted', 'preempted'], connector_outcome='succeeded')
+	sq = Sequence(outcomes=['succeeded', 'aborted', 'preempted'], connector_outcome='succeeded')
 
-    pose = PoseStamped()
-    pose.header.frame_id = 'base_link'
-    pose.pose.position.x = AWAY_X
-    pose.pose.position.y = AWAY_Y
-    pose.pose.position.z = AWAY_Z
-    pose.pose.orientation = DRAW_ORIENTATION
+	pose = PoseStamped()
+	pose.header.frame_id = 'base_link'
+	pose.pose.position.x = AWAY_X
+	pose.pose.position.y = AWAY_Y
+	pose.pose.position.z = AWAY_Z
+	pose.pose.orientation = DRAW_ORIENTATION
 
-    sq.userdata.goal = pose
-    sq.userdata.ik_link = AWAY_HAND_LINK
-    sq.userdata.frame_id = FRAME_ID
+	sq.userdata.goal = pose
+	sq.userdata.ik_link = AWAY_HAND_LINK
+	sq.userdata.frame_id = FRAME_ID
 
-    plan = gensm_plan_vis_exec(Plan1ToXtionPoseState(), confirm=CONFIRM, visualize=VISUALIZE, execute=EXECUTE)
-    with sq:
-        Sequence.add("EXTA", plan)
+	plan = gensm_plan_vis_exec(Plan1ToXtionPoseState(), confirm=CONFIRM, visualize=VISUALIZE, execute=EXECUTE)
+	with sq:
+		Sequence.add("EXTA", plan)
 
-    return sq
+	return sq
 
-def draw_plan(data):
-    pose = Pose()
-    pose.orientation = DRAW_ORIENTATION
-    poses = []
-    points = data.data
+def draw_plan():
+	pose = Pose()
+	pose.orientation = DRAW_ORIENTATION
+	poses = []
 
-    for point in points:
-    	print point
-        pose.position.x = point.x * X_DIMENSION
-        pose.position.y = point.y * Y_DIMENSION
-        pose.position.z = DRAW_Z + (Z_OFFSET*point.lift_state)
-        poses.append(copy.deepcopy(pose))
+	while(instructions.size>0):
+		point = instructions.pop()
+		print point
+		pose.position.x = point.x * X_DIMENSION
+		pose.position.y = point.y * Y_DIMENSION
+		pose.position.z = DRAW_Z + (Z_OFFSET*point.lift_state)
+		poses.append(copy.deepcopy(pose))
 
-    sq = smach.Sequence(outcomes=['succeeded', 'preempted', 'aborted'], connector_outcome='succeeded')
-    goto_plan = gensm_plan_vis_exec(Plan1ToPoseState(), input_keys=['goal', 'ik_link'], confirm=CONFIRM, visualize=VISUALIZE, execute=EXECUTE)
-    sq.userdata.poses = PoseArray()
-    sq.userdata.poses.header.frame_id = FRAME_ID
-    sq.userdata.poses.poses = poses
-    sq.userdata.frame_id = FRAME_ID
-    sq.userdata.ik_link = DRAW_HAND_LINK
+	sq = smach.Sequence(outcomes=['succeeded', 'preempted', 'aborted'], connector_outcome='succeeded')
+	goto_plan = gensm_plan_vis_exec(Plan1ToPoseState(), input_keys=['goal', 'ik_link'], confirm=CONFIRM, visualize=VISUALIZE, execute=EXECUTE)
+	sq.userdata.poses = PoseArray()
+	sq.userdata.poses.header.frame_id = FRAME_ID
+	sq.userdata.poses.poses = poses
+	sq.userdata.frame_id = FRAME_ID
+	sq.userdata.ik_link = DRAW_HAND_LINK
 
-    with sq:
-        smach.Sequence.add('POSE_BUFFER', PoseBufferState())
-        smach.Sequence.add('GOTO', goto_plan, transitions={'aborted':'POSE_BUFFER', 'succeeded':'POSE_BUFFER'},
-                           remapping={'goal':'pose'})
+	with sq:
+		smach.Sequence.add('POSE_BUFFER', PoseBufferState())
+		smach.Sequence.add('GOTO', goto_plan, transitions={'aborted':'POSE_BUFFER', 'succeeded':'POSE_BUFFER'},
+						   remapping={'goal':'pose'})
 
-    return sq
+	return sq
 
 def listen():
-    rospy.Subscriber("instructions", numpy_msg(Plotter), draw_plan)
-    rospy.spin()
+	rospy.Subscriber("Plotter", numpy_msg(Plot), path_from_image)
 
 def main():
-    
-    rospy.init_node('paint')
-    listen()
+	
+	rospy.init_node('paint')
 
-    sq = Sequence(outcomes=['succeeded', 'aborted', 'preempted'], connector_outcome='succeeded')
-    print "HELP"
-    with sq:
-        Sequence.add('OPEN_GRIPPER', GripperState(2, True), {'succeeded':'TURN', 'aborted':'HOME'})
-     	print "HELP1"
-        Sequence.add("TURN", ext_plan(), transitions={'aborted':'HOME', 'succeeded':'AWAY'})
-    	print "HELP2"
-        Sequence.add("AWAY", away_plan(), transitions={'aborted':'HOME', 'succeeded':'GRAB'})
-    	print "HELP3"
-        Sequence.add("GRAB", grab_plan(sq), transitions={'aborted':'HOME', 'succeeded':'DRAW'})
-    	print "Ready to draw"
-        while not rospy.is_shutdown():
-            Sequence.add("DRAW", draw_plan(path_from_image(IMAGE_PATH)), transitions={'aborted':'HOME', 'succeeded':'RELEASE'})
-    	print "HELP5"
-        Sequence.add("RELEASE", GripperState(2, True), transitions={'aborted':'HOME', 'succeeded':'HOME'})
-    	print "HELP6"
-        # TODO
-        # Open hand to release -> HOME
-        Sequence.add("HOME", home_plan(), transitions={'aborted':'POWER_OFF'})
-    	print "HELP7"
-        Sequence.add("POWER_OFF", SetServoPowerOffState())
-    	print "HELP8"
+	sq = Sequence(outcomes=['succeeded', 'aborted', 'preempted'], connector_outcome='succeeded')
+	print "HELP"
+	with sq:
+		Sequence.add('OPEN_GRIPPER', GripperState(2, True), {'succeeded':'TURN', 'aborted':'HOME'})
+		print "HELP1"
+		Sequence.add("TURN", ext_plan(), transitions={'aborted':'HOME', 'succeeded':'AWAY'})
+		print "HELP2"
+		Sequence.add("AWAY", away_plan(), transitions={'aborted':'HOME', 'succeeded':'GRAB'})
+		print "HELP3"
+		Sequence.add("GRAB", grab_plan(sq), transitions={'aborted':'HOME', 'succeeded':'DRAW'})
+		print "Ready to draw"
+		listen()
+		print "Listening"
+		Sequence.add("DRAW", draw_plan(), transitions={'aborted':'HOME', 'succeeded':'RELEASE'})
+		print "HELP5"
+		Sequence.add("RELEASE", GripperState(2, True), transitions={'aborted':'HOME', 'succeeded':'HOME'})
+		print "HELP6"
+		# TODO
+		# Open hand to release -> HOME
+		Sequence.add("HOME", home_plan(), transitions={'aborted':'POWER_OFF'})
+		print "HELP7"
+		Sequence.add("POWER_OFF", SetServoPowerOffState())
+		print "HELP8"
 
 
-    sis = smach_ros.IntrospectionServer('paint', sq, '/SM_ROOT')
-    sis.start()
-    os.system('clear')
-    outcome = sq.execute()
-    rospy.loginfo("State machine exited with outcome: " + outcome)
-    sis.stop()
+	sis = smach_ros.IntrospectionServer('paint', sq, '/SM_ROOT')
+	sis.start()
+	os.system('clear')
+	outcome = sq.execute()
+	rospy.loginfo("State machine exited with outcome: " + outcome)
+	sis.stop()
 
 if __name__ == '__main__':
-    main()
+	main()

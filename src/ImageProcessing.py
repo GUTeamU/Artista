@@ -8,7 +8,7 @@ import numpy as np
 from matplotlib import pyplot as plt
 
 from rospy.numpy_msg import numpy_msg
-from artista.msg import Plotter
+from artista.msg import Plot
 
 
 
@@ -31,7 +31,7 @@ def createInstructions(image, colour=255):
 			if ((x,y) not in pixels_visited):
 				pixels_visited[(x,y)] = True
 				if(pixel>=colour):
-					instructions =np.array([ Plotter(x/image_x, y/image_y, 0) ])
+					instructions =np.array([ Plot(x/image_x, y/image_y, 0) ])
 					pen_state = 0
 					pen_state = processLine(x, y, instructions, pen_state, pixels_visited, image, colour)
 					pub.publish(instructions)
@@ -100,16 +100,16 @@ def checkDirection(x, y, x_direction, y_direction, instructions, pState, pixels_
 	
 	if(((x + x_direction, y + y_direction) not in pixels_visited) and image[x + x_direction][y + y_direction]>=colour):
 		if(pState==1):
-			np.append( instructions, Plotter(x/image_x, y/image_y, pState) )
+			np.append( instructions, Plot(x/image_x, y/image_y, pState) )
 			pState = 0
-			np.append( instructions, Plotter(x/image_x, y/image_y, pState) )
-		np.append(instructions,  Plotter( (x + x_direction)/image_x, (y + y_direction)/image_y, pState ))
+			np.append( instructions, Plot(x/image_x, y/image_y, pState) )
+		np.append(instructions,  Plot( (x + x_direction)/image_x, (y + y_direction)/image_y, pState ))
 		pixels_visited[ (x + x_direction, y + y_direction) ] = True
 		pState = processLine(x + x_direction, y + y_direction, instructions, pState, pixels_visited, image, colour)
 	pixels_visited[(x + x_direction, y + y_direction)] = True
 	return pState
 	
-rospy.Publisher("instructions", numpy_msg(Plotter))
+rospy.Publisher("Plotter", numpy_msg(Plot))
 pub = rospy.init_node('imageProcessing')
 img = cv.imread('C:\Users\Andrew\Documents\GitHub\Artista\photos\circle.jpg', 0)
 image_y, image_x = img.shape
