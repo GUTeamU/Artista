@@ -10,14 +10,14 @@ from geometry_msgs.msg import *
 
 from rospy.numpy_msg import numpy_msg
 from artista.msg import Plot
-from ImageProcessing.py
+from ImageProcessing import *
 
 
 VISUALIZE=True
 CONFIRM=False
 EXECUTE=True
 
-IMAGE_PATH="/home/teamu/catkin_ws/src/Artista/photos/Testface.jpg"
+IMAGE_PATH="/home/teamu/catkin_ws/src/Artista/photos/circle.jpg"
 
 X_DIMENSION = 50    # The dimensions of the board we write on
 Y_DIMENSION = 50
@@ -115,7 +115,7 @@ def away_plan():
 
 	return sq
 
-def draw_plan(path="C:\Users\Andrew\Documents\GitHub\Artista\photos"):
+def draw_plan(path=IMAGE_PATH):
 	pose = Pose()
 	pose.orientation = DRAW_ORIENTATION
 	poses = []
