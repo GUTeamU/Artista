@@ -130,7 +130,7 @@ def processLine(x, y, instructions, pen_state, pixels_visited, image, colour):
 	
 def checkDirection(x, y, x_direction, y_direction, instructions, pState, pixels_visited, image, colour):
 	print "x: %i, y: %i, x_d: %i, y_d: %i" % (x, y, x_direction, y_direction)
-	if(((x + x_direction, y + y_direction) not in pixels_visited) and image[x + x_direction][y + y_direction]>=colour):
+	if(((x + x_direction, y + y_direction) not in pixels_visited) and (0<(x + x_direction)<=image_x) and (0<(y + y_direction)<=image_y) and image[x + x_direction][y + y_direction]>=colour):
 		if(pState==1):
 			np.append( instructions, Plot(x/image_x, y/image_y, pState) )
 			pState = 0
@@ -140,3 +140,7 @@ def checkDirection(x, y, x_direction, y_direction, instructions, pState, pixels_
 		pState = processLine(x + x_direction, y + y_direction, instructions, pState, pixels_visited, image, colour)
 	pixels_visited[(x + x_direction, y + y_direction)] = True
 	return pState
+
+if __name__ == '__main__':
+	# createInstructionsFromPath("C:\Users\Andrew\Documents\GitHub\Artista\photos\circle.jpg")
+	createInstructionsFromPath("/home/teamu/catkin_ws/src/Artista/photos/circle.jpg")
