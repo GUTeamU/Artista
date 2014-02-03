@@ -119,7 +119,7 @@ def draw_plan(path=IMAGE_PATH):
 	pose = Pose()
 	pose.orientation = DRAW_ORIENTATION
 	poses = []
-	instructions = createInstructionsFromPath(path, "canny")
+	instructions = createInstructionsFromPath(path, "canny", "None")
 	points =  instructions.data
 
 	for point in points:

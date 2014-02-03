@@ -7,7 +7,6 @@ import rospy
 import numpy as np
 from matplotlib import pyplot as plt
 
-from rospy.numpy_msg import numpy_msg
 from artista.msg import Plot
 
 
@@ -51,11 +50,12 @@ def filter(image, filterName):
 		return cv.Canny(image,100,200)
 	
 	print "Filter not found"
-	return None
+	return image
 	
 def generateInstructions(image, colour=255):
 	pixels_visited = {}
 	instructions = np.array([], dtype=Plot)
+	# instructions = []
 	x=0
 	for line in image:
 		y=0
@@ -66,6 +66,7 @@ def generateInstructions(image, colour=255):
 			if ((x,y) not in pixels_visited):
 				pixels_visited[(x,y)] = True
 				if(pixel>=colour):
+					# print "x: %i, y: %i, z: %i"%(x, y, 0)
 					np.append(instructions, Plot(x/image_x, y/image_y, 0))
 					pen_state = 0
 					pen_state = processLine(x, y, instructions, pen_state, pixels_visited, image, colour)
@@ -125,16 +126,20 @@ def processLine(x, y, instructions, pen_state, pixels_visited, image, colour):
 
 		
 	if(pState != 1):
-		np.append(instructions, (x/image_x, y/image_y, 1) )
+		# print "x: %5.5f, y: %5.5f, z: %5.5f"%(x/image_x, y/image_y, 1)
+		np.append(instructions, Plot(x/image_x, y/image_y, 1) )
 	return 1
 	
 def checkDirection(x, y, x_direction, y_direction, instructions, pState, pixels_visited, image, colour):
 	print "x: %i, y: %i, x_d: %i, y_d: %i" % (x, y, x_direction, y_direction)
-	if(((x + x_direction, y + y_direction) not in pixels_visited) and (0<(x + x_direction)<=image_x) and (0<(y + y_direction)<=image_y) and image[x + x_direction][y + y_direction]>=colour):
+	if(((x + x_direction, y + y_direction) not in pixels_visited) and (0<(x + x_direction)<image_x) and (0<(y + y_direction)<image_y) and image[x + x_direction][y + y_direction]>=colour):
 		if(pState==1):
+			# print "x: %5.5f, y: %5.5f, z: %5.5f"%(x/image_x, y/image_y, pState)
 			np.append( instructions, Plot(x/image_x, y/image_y, pState) )
 			pState = 0
+			# print "x: %5.5f, y: %5.5f, z: %5.5f"%(x/image_x, y/image_y, pState)
 			np.append( instructions, Plot(x/image_x, y/image_y, pState) )
+		# print "x: %5.5f, y: %5.5f, z: %5.5f"%( ((x + x_direction)/image_x), ((y + y_direction)/image_y), pState)
 		np.append(instructions,  Plot( (x + x_direction)/image_x, (y + y_direction)/image_y, pState ))
 		pixels_visited[ (x + x_direction, y + y_direction) ] = True
 		pState = processLine(x + x_direction, y + y_direction, instructions, pState, pixels_visited, image, colour)
@@ -142,5 +147,5 @@ def checkDirection(x, y, x_direction, y_direction, instructions, pState, pixels_
 	return pState
 
 if __name__ == '__main__':
-	# createInstructionsFromPath("C:\Users\Andrew\Documents\GitHub\Artista\photos\circle.jpg")
-	createInstructionsFromPath("/home/teamu/catkin_ws/src/Artista/photos/circle.jpg")
+	createInstructionsFromPath("C:\Users\Andrew\Documents\GitHub\Artista\photos\circle.jpg", "None")
+	# createInstructionsFromPath("/home/teamu/catkin_ws/src/Artista/photos/circle.jpg")
