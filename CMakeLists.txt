@@ -50,7 +50,7 @@ geometry_msgs
 ## Generate messages in the 'msg' folder
  add_message_files(
    FILES
-    Plotter.msg
+    Plot.msg
 #   Message1.msg
 #   Message2.msg
  )

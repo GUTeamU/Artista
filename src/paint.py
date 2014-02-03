@@ -10,6 +10,8 @@ from geometry_msgs.msg import *
 
 from rospy.numpy_msg import numpy_msg
 from artista.msg import Plot
+from ImageProcessing.py
+
 
 VISUALIZE=True
 CONFIRM=False
@@ -44,7 +46,7 @@ GRAB_ORIENTATION_Y = 1
 
 # define 0 as lower pen
 # define 1 as raise pen
-instructions = np.array(dtype=Plot)
+
 	
 def path_from_image(data):
 	for plot in data:
@@ -113,16 +115,17 @@ def away_plan():
 
 	return sq
 
-def draw_plan():
+def draw_plan(path="C:\Users\Andrew\Documents\GitHub\Artista\photos"):
 	pose = Pose()
 	pose.orientation = DRAW_ORIENTATION
 	poses = []
+	instructions = createInstructionsFromPath(path, "canny")
+	points =  instructions.data
 
-	while(instructions.size>0):
-		point = instructions.pop()
+	for point in points:
 		print point
-		pose.position.x = point.x * X_DIMENSION
-		pose.position.y = point.y * Y_DIMENSION
+		pose.position.x = DRAW_X - (point.x * X_DIMENSION)
+		pose.position.y = DRAW_Y - (point.y * Y_DIMENSION)
 		pose.position.z = DRAW_Z + (Z_OFFSET*point.lift_state)
 		poses.append(copy.deepcopy(pose))
 
@@ -141,9 +144,6 @@ def draw_plan():
 
 	return sq
 
-def listen():
-	rospy.Subscriber("Plotter", numpy_msg(Plot), path_from_image)
-
 def main():
 	
 	rospy.init_node('paint')
@@ -159,8 +159,6 @@ def main():
 		print "HELP3"
 		Sequence.add("GRAB", grab_plan(sq), transitions={'aborted':'HOME', 'succeeded':'DRAW'})
 		print "Ready to draw"
-		listen()
-		print "Listening"
 		Sequence.add("DRAW", draw_plan(), transitions={'aborted':'HOME', 'succeeded':'RELEASE'})
 		print "HELP5"
 		Sequence.add("RELEASE", GripperState(2, True), transitions={'aborted':'HOME', 'succeeded':'HOME'})
