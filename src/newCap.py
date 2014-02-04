@@ -8,13 +8,13 @@ from sensor_msgs.msg import Image
 from cv_bridge import CvBridge, CvBridgeError
 
 
-class image_converter:
+class capture_image:
 	def __init__(self):
-		self.image_pub = rospy.Publisher("image_topic_2",Image)
+	#	self.image_pub = rospy.Publisher("image_topic_2",Image)
 	
 		cv.NamedWindow("Image Window", 1)
 		self.bridge = CvBridge()
-		self.image_sub = rospy.Subscriber("image_topic",Image,self.callback)
+		self.image_sub = rospy.Subscriber("/camera/image_raw",Image,self.callback)
 
 	def callback(self,data):
 		try:
@@ -26,8 +26,8 @@ class image_converter:
 		cv.SaveImage("face.png")
 
 def main():
-	ic = image_converter()
-	rospy.init_node('image_converter', anonymous=True)
+	ci = capture_image()
+	rospy.init_node('image_converter', anonymous=True) # Don't know if needed.
 	try:
 		rospy.spin()
 	except KeyboardInterrupt:
