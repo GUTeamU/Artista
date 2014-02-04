@@ -26,10 +26,8 @@ def createInstructionsFromPath(path, filterName="canny"):
 	edges = filter(img, filterName)
 
 	# print str(image_y) + " " + str(image_x)
-	ins = generateInstructions(edges, 240)
-	print "Create"
-	print ins
-	return ins
+
+	return generateInstructions(edges, 240)
 	# print "finish processing edges"
 	# print str(len(instructions[0]))
 
@@ -56,8 +54,8 @@ def filter(image, filterName):
 	
 def generateInstructions(image, colour=255):
 	pixels_visited = {}
-	instructions = np.array([])
-	# instructions = []
+	# instructions = np.array([], dtype=Plot)
+	instructions = []
 	x=0
 	for line in image:
 		y=0
@@ -69,13 +67,14 @@ def generateInstructions(image, colour=255):
 				pixels_visited[(x,y)] = True
 				if(pixel>=colour):
 					# print "x: %i, y: %i, z: %i"%(x, y, 0)
-					instructions = np.append(instructions, [Plot(x/image_x, y/image_y, 0)])
+					# np.append(instructions, Plot(x/image_x, y/image_y, 0))
+					instructions.append((x/image_x, y/image_y, 0))
 					pen_state = 0
-					pen_state, instructions = processLine(x, y, instructions, pen_state, pixels_visited, image, colour)
-					print "Gen: "
-					print instructions
+					pen_state = processLine(x, y, instructions, pen_state, pixels_visited, image, colour)
 			y+=1
 		x+=1
+	print "instructions: "
+	print instructions
 	return instructions
 	
 def processLine(x, y, instructions, pen_state, pixels_visited, image, colour):
@@ -85,70 +84,74 @@ def processLine(x, y, instructions, pen_state, pixels_visited, image, colour):
 	# X #
 	# o #
 	# # #
-	pState, instructions = checkDirection(x, y, -1, 0, instructions, pState, pixels_visited, image, colour)
+	pState = checkDirection(x, y, -1, 0, instructions, pState, pixels_visited, image, colour)
 	
 	# # X
 	# o #
 	# # #
-	pState, instructions = checkDirection(x, y, -1, 1, instructions, pState, pixels_visited, image, colour)
+	pState = checkDirection(x, y, -1, 1, instructions, pState, pixels_visited, image, colour)
 
 
 	# # #
 	# o X
 	# # #
-	pState, instructions = checkDirection(x, y, 0, 1, instructions, pState, pixels_visited, image, colour)
+	pState = checkDirection(x, y, 0, 1, instructions, pState, pixels_visited, image, colour)
 
 	
 	# # #
 	# o #
 	# # X
-	pState, instructions = checkDirection(x, y, 1, 1, instructions, pState, pixels_visited, image, colour)
+	pState = checkDirection(x, y, 1, 1, instructions, pState, pixels_visited, image, colour)
 
 	
 	# # #
 	# o #
 	# X #
-	pState, instructions = checkDirection(x, y, 1, 0, instructions, pState, pixels_visited, image, colour)
+	pState = checkDirection(x, y, 1, 0, instructions, pState, pixels_visited, image, colour)
 
 	
 	# # #
 	# o #
 #	X # #
-	pState, instructions = checkDirection(x, y, 1, -1, instructions, pState, pixels_visited, image, colour)
+	pState = checkDirection(x, y, 1, -1, instructions, pState, pixels_visited, image, colour)
 
 	
 	# # #
 #	X o #
 	# # #
-	pState, instructions = checkDirection(x, y, 0, -1, instructions, pState, pixels_visited, image, colour)
+	pState = checkDirection(x, y, 0, -1, instructions, pState, pixels_visited, image, colour)
 
 	
 #	X # #
 	# o #
 	# # #
-	pState, instructions = checkDirection(x, y, -1, -1, instructions, pState, pixels_visited, image, colour)
+	pState = checkDirection(x, y, -1, -1, instructions, pState, pixels_visited, image, colour)
 
 		
 	if(pState != 1):
 		# print "x: %5.5f, y: %5.5f, z: %5.5f"%(x/image_x, y/image_y, 1)
-		instructions = np.append(instructions, [Plot(x/image_x, y/image_y, 1)] )
-	return 1, instructions
+		# np.append(instructions, Plot(x/image_x, y/image_y, 1) )
+		instructions.append((x/image_x, y/image_y, 1))
+	return 1
 	
 def checkDirection(x, y, x_direction, y_direction, instructions, pState, pixels_visited, image, colour):
 	# print "x: %i, y: %i, x_d: %i, y_d: %i" % (x, y, x_direction, y_direction)
 	if(((x + x_direction, y + y_direction) not in pixels_visited) and (0<(x + x_direction)<image_x) and (0<(y + y_direction)<image_y) and image[x + x_direction][y + y_direction]>=colour):
 		if(pState==1):
 			# print "x: %5.5f, y: %5.5f, z: %5.5f"%(x/image_x, y/image_y, pState)
-			instructions = np.append( instructions, [Plot(x/image_x, y/image_y, pState)] )
+			# np.append( instructions, Plot(x/image_x, y/image_y, pState) )
+			instructions.append((x/image_x, y/image_y, pState))
 			pState = 0
 			# print "x: %5.5f, y: %5.5f, z: %5.5f"%(x/image_x, y/image_y, pState)
-			instructions = np.append( instructions, [Plot(x/image_x, y/image_y, pState)] )
+			# np.append( instructions, Plot(x/image_x, y/image_y, pState) )
+			instructions.append((x/image_x, y/image_y, pState))
 		# print "x: %5.5f, y: %5.5f, z: %5.5f"%( ((x + x_direction)/image_x), ((y + y_direction)/image_y), pState)
-		instructions = np.append(instructions,  [Plot( (x + x_direction)/image_x, (y + y_direction)/image_y, pState )])
+		np.append(instructions,  Plot( (x + x_direction)/image_x, (y + y_direction)/image_y, pState ))
+		instructions.append(( (x + x_direction)/image_x, (y + y_direction)/image_y, pState ))
 		pixels_visited[ (x + x_direction, y + y_direction) ] = True
 		pState = processLine(x + x_direction, y + y_direction, instructions, pState, pixels_visited, image, colour)
 	pixels_visited[(x + x_direction, y + y_direction)] = True
-	return pState, instructions
+	return pState
 
 if __name__ == '__main__':
 	createInstructionsFromPath("C:\Users\Andrew\Documents\GitHub\Artista\photos\circle.jpg", "None")

@@ -120,17 +120,13 @@ def draw_plan(path=IMAGE_PATH):
 	pose.orientation = DRAW_ORIENTATION
 	poses = []
 	instructions = createInstructionsFromPath(path, "None")
-	points =  instructions.data
-	rospy.loginfo(points)
-	print points
-	rospy.loginfo(instructions)
-	print instructions
+	points =  instructions
 
 	for point in points:
-		rospy.loginfo("x: %5.5f, y: %5.5f, z: %5.5f", point.x, point.y, point.liftstate)
-		pose.position.x = DRAW_X - (point.x * X_DIMENSION)
-		pose.position.y = DRAW_Y - (point.y * Y_DIMENSION)
-		pose.position.z = DRAW_Z + (Z_OFFSET*point.lift_state)
+		print point
+		pose.position.x = DRAW_X - (point[0] * X_DIMENSION)
+		pose.position.y = DRAW_Y - (point[1] * Y_DIMENSION)
+		pose.position.z = DRAW_Z + (Z_OFFSET*point[2])
 		poses.append(copy.deepcopy(pose))
 
 	sq = smach.Sequence(outcomes=['succeeded', 'preempted', 'aborted'], connector_outcome='succeeded')
@@ -184,3 +180,4 @@ def main():
 
 if __name__ == '__main__':
 	main()
+
