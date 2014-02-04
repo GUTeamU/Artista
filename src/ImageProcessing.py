@@ -13,7 +13,7 @@ from matplotlib import pyplot as plt
 image_x = 1000.0
 image_y = 1000.0
 
-def createInstructionsFromPath(path, filterName="canny"):
+def createInstructionsFromPath(path, filterName="Canny"):
 	img = cv.imread(path, 0)
 	image_y, image_x = img.shape
 	image_x = float(image_x)
@@ -21,9 +21,9 @@ def createInstructionsFromPath(path, filterName="canny"):
 	
 	edges = filter(img, filterName)
 	
-	return generateInstructions(edges, 240
+	return generateInstructions(edges, 240)
 	
-def createInstructionsFromImage(img, filterName="canny"):
+def createInstructionsFromImage(img, filterName="Canny"):
 	image_y, image_x = img.shape
 	image_x = float(image_x)
 	image_y = float(image_y)
@@ -33,7 +33,7 @@ def createInstructionsFromImage(img, filterName="canny"):
 	return  generateInstructions(edges, 240)
 
 def filter(image, filterName):
-	if(filterName=="canny"):
+	if(filterName=="Canny"):
 		return cv.Canny(image,100,200)
 	elif(filterName=="Custom"):
 		# Add your stuff here Fraser or Michael
@@ -52,13 +52,12 @@ def generateInstructions(image, colour=255):
 			if ((x,y) not in pixels_visited):
 				pixels_visited[(x,y)] = True
 				if(pixel>=colour):
+					instructions.append((x/image_x, y/image_y, 1))
 					instructions.append((x/image_x, y/image_y, 0))
 					pen_state = 0
 					pen_state = processLine(x, y, instructions, pen_state, pixels_visited, image, colour)
 			y+=1
 		x+=1
-	print "instructions: "
-	print instructions
 	return instructions
 	
 def processLine(x, y, instructions, pen_state, pixels_visited, image, colour):
@@ -122,7 +121,6 @@ def checkDirection(x, y, x_direction, y_direction, instructions, pState, pixels_
 			instructions.append((x/image_x, y/image_y, pState))
 			pState = 0
 			instructions.append((x/image_x, y/image_y, pState))
-		np.append(instructions,  Plot( (x + x_direction)/image_x, (y + y_direction)/image_y, pState ))
 		instructions.append(( (x + x_direction)/image_x, (y + y_direction)/image_y, pState ))
 		pixels_visited[ (x + x_direction, y + y_direction) ] = True
 		pState = processLine(x + x_direction, y + y_direction, instructions, pState, pixels_visited, image, colour)

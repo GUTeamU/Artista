@@ -18,6 +18,7 @@ CONFIRM=False
 EXECUTE=True
 
 IMAGE_PATH="/home/teamu/catkin_ws/src/Artista/photos/circle.jpg"
+FILTER = "None"
 
 X_DIMENSION = 50    # The dimensions of the board we write on
 Y_DIMENSION = 50
@@ -104,10 +105,9 @@ def draw_plan(path=IMAGE_PATH):
 	pose = Pose()
 	pose.orientation = DRAW_ORIENTATION
 	poses = []
-	instructions = createInstructionsFromPath(path, "None")
+	instructions = createInstructionsFromPath(path, FILTER)
 
 	for point in instructions:
-		print point
 		pose.position.x = DRAW_X - (point[0] * X_DIMENSION)
 		pose.position.y = DRAW_Y - (point[1] * Y_DIMENSION)
 		pose.position.z = DRAW_Z + (Z_OFFSET*point[2])
@@ -133,26 +133,26 @@ def main():
 	rospy.init_node('paint')
 
 	sq = Sequence(outcomes=['succeeded', 'aborted', 'preempted'], connector_outcome='succeeded')
-	print "HELP"
+
 	with sq:
 		Sequence.add('OPEN_GRIPPER', GripperState(2, True), {'succeeded':'TURN', 'aborted':'HOME'})
-		print "HELP1"
+
 		Sequence.add("TURN", ext_plan(), transitions={'aborted':'HOME', 'succeeded':'AWAY'})
-		print "HELP2"
+
 		Sequence.add("AWAY", away_plan(), transitions={'aborted':'HOME', 'succeeded':'GRAB'})
-		print "HELP3"
+
 		Sequence.add("GRAB", grab_plan(sq), transitions={'aborted':'HOME', 'succeeded':'DRAW'})
-		print "Ready to draw"
+
 		Sequence.add("DRAW", draw_plan(), transitions={'aborted':'HOME', 'succeeded':'RELEASE'})
-		print "HELP5"
+
 		Sequence.add("RELEASE", GripperState(2, True), transitions={'aborted':'HOME', 'succeeded':'HOME'})
-		print "HELP6"
+
 		# TODO
 		# Open hand to release -> HOME
 		Sequence.add("HOME", home_plan(), transitions={'aborted':'POWER_OFF'})
-		print "HELP7"
+
 		Sequence.add("POWER_OFF", SetServoPowerOffState())
-		print "HELP8"
+
 
 
 	sis = smach_ros.IntrospectionServer('paint', sq, '/SM_ROOT')
