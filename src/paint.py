@@ -9,7 +9,7 @@ from clopema_smach import *
 from geometry_msgs.msg import *
 
 from rospy.numpy_msg import numpy_msg
-from artista.msg import Plot
+
 from ImageProcessing import *
 
 
@@ -46,21 +46,6 @@ GRAB_ORIENTATION_Y = 1
 
 # define 0 as lower pen
 # define 1 as raise pen
-
-	
-def path_from_image(data):
-	for plot in data:
-		instructions.append(plot)
-	# return [
-	# 		(DRAW_X, DRAW_Y, DRAW_Z + Z_OFFSET),
-	# 		(DRAW_X, DRAW_Y, DRAW_Z),
-	# 		(DRAW_X, DRAW_Y - 0.1, DRAW_Z),
-	# 		(DRAW_X - 0.1, DRAW_Y - 0.1, DRAW_Z),
-	# 		(DRAW_X - 0.1, DRAW_Y, DRAW_Z),
-	# 		(DRAW_X, DRAW_Y, DRAW_Z),
-	# 		(DRAW_X, DRAW_Y, DRAW_Z + Z_OFFSET)
-	# 	   ]
-
 
 def grab_plan(sq):
 	
@@ -120,9 +105,8 @@ def draw_plan(path=IMAGE_PATH):
 	pose.orientation = DRAW_ORIENTATION
 	poses = []
 	instructions = createInstructionsFromPath(path, "None")
-	points =  instructions
 
-	for point in points:
+	for point in instructions:
 		print point
 		pose.position.x = DRAW_X - (point[0] * X_DIMENSION)
 		pose.position.y = DRAW_Y - (point[1] * Y_DIMENSION)
