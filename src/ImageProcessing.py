@@ -37,6 +37,7 @@ def filter(image, filterName):
 		return cv.Canny(image,100,200)
 	elif(filterName=="Custom"):
 		# Add your stuff here Fraser or Michael
+		return image
 		pass
 	print "Filter not found"
 	return image
@@ -128,5 +129,5 @@ def checkDirection(x, y, x_direction, y_direction, instructions, pState, pixels_
 	return pState
 
 if __name__ == '__main__':
-	createInstructionsFromPath("C:\Users\Andrew\Documents\GitHub\Artista\photos\circle.jpg", "None")
+	createInstructionsFromPath("wiener.jpg", "None")
 	# createInstructionsFromPath("/home/teamu/catkin_ws/src/Artista/photos/circle.jpg")
