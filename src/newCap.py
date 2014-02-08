@@ -23,7 +23,7 @@ class capture_image:
 			print e
 		
 		cv.ShowImage("Image Window", cv_image)
-		cv.SaveImage("face.png")
+		cv.SaveImage("face.png",cv_image)
 
 def main():
 	ci = capture_image()
