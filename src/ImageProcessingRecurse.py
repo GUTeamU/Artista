@@ -9,16 +9,20 @@ image_x = 1000.0
 image_y = 1000.0
 
 def createInstructionsFromPath(path, filterName="Canny"):
+	global image_x
+	global image_y
 	img = cv.imread(path, 0)
 	image_y, image_x = img.shape
 	image_x = float(image_x)
 	image_y = float(image_y)
 	
 	edges = filter(img, filterName)
-	
+	# print generateInstructions(edges, 240)
 	return generateInstructions(edges, 240)
 	
 def createInstructionsFromImage(img, filterName="Canny"):
+	global image_x
+	global image_y
 	image_y, image_x = img.shape
 	image_x = float(image_x)
 	image_y = float(image_y)
@@ -124,5 +128,5 @@ def checkDirection(x, y, x_direction, y_direction, instructions, pState, pixels_
 	return pState
 
 if __name__ == '__main__':
-	createInstructionsFromPath("wiener.jpg", "None")
-	# createInstructionsFromPath("/home/teamu/catkin_ws/src/Artista/photos/circle.jpg")
+	# createInstructionsFromPath("wiener.jpg", "None")
+	createInstructionsFromPath("../photos/circle.jpg", "None")
