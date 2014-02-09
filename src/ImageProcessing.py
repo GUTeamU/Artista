@@ -1,11 +1,6 @@
 #!/usr/bin/env python
 import cv2 as cv
 # import pyopencv as cv
-import roslib; roslib.load_manifest('artista')
-import rospy
-
-import numpy as np
-from matplotlib import pyplot as plt
 
 # define 0 as lower pen
 # define 1 as raise pen
