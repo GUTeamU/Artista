@@ -17,7 +17,7 @@ def createInstructionsFromPath(path, filterName="Canny"):
 	global image_x
 	global image_y
 	img = cv.imread(path, 0)
-	image_x, image_y = img.shape
+	image_y, image_x = img.shape
 	print image_y
 	print image_x
 	edges = filter(img, filterName)
@@ -28,7 +28,7 @@ def createInstructionsFromPath(path, filterName="Canny"):
 def createInstructionsFromImage(img, filterName="Canny"):
 	global image_x
 	global image_y
-	image_y, image_x = img.shape
+	image_x, image_y = img.shape
 	image_x = float(image_x)
 	image_y = float(image_y)
 	
@@ -50,9 +50,9 @@ def generateInstructions(image, colour=255):
 	global pixels_visited
 	global instructions
 
-	x=0
+	y=0
 	for line in image:
-		y=0
+		x=0
 		for pixel in line:
 			
 			if ((x,y) not in pixels_visited):
@@ -61,8 +61,8 @@ def generateInstructions(image, colour=255):
 					instructions.append((x/float(image_x), y/float(image_y), 1))
 					instructions.append((x/float(image_x), y/float(image_y), 0))
 					processLine(x, y, image, colour)
-			y+=1
-		x+=1
+			x+=1
+		y+=1
 	return instructions
 	
 def processLine(x, y, image, colour):
@@ -76,7 +76,6 @@ def processLine(x, y, image, colour):
 	return
 	
 def nextInstruction(image, colour):
-	global instructions
 
 	# X #
 	# o #
@@ -146,7 +145,7 @@ def check(x_direction, y_direction, image, colour):
 	   and ((cur_x + x_direction)<image_x) \
 	   and (0<(cur_y + y_direction)) \
 	   and ((cur_y + y_direction)<image_y) \
-	   and image[cur_x + x_direction][cur_y + y_direction]>=colour):
+	   and image[cur_y + y_direction][cur_x + x_direction]>=colour):
 		instructions.append(( (cur_x + x_direction)/float(image_x), (cur_y + y_direction)/float(image_y), 0))
 		cur_x += x_direction
 		cur_y += y_direction
@@ -158,5 +157,5 @@ def check(x_direction, y_direction, image, colour):
 
 if __name__ == '__main__':
 	# createInstructionsFromPath("wiener.jpg", "None")
-	# createInstructionsFromPath("wiener.jpg")
+	createInstructionsFromPath("wiener.jpg")
 	# createInstructionsFromPath("../photos/circle.jpg", "None")
