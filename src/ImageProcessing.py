@@ -1,4 +1,5 @@
 #!/usr/bin/env python
+import cv2
 import cv2 as cv
 # import pyopencv as cv
 import roslib; roslib.load_manifest('artista')
@@ -13,7 +14,7 @@ from matplotlib import pyplot as plt
 image_x = 1000.0
 image_y = 1000.0
 
-def createInstructionsFromPath(path, filterName="Canny"):
+def createInstructionsFromPath(path, filterName):
 	img = cv.imread(path, 0)
 	image_y, image_x = img.shape
 	image_x = float(image_x)
@@ -23,7 +24,7 @@ def createInstructionsFromPath(path, filterName="Canny"):
 	
 	return generateInstructions(edges, 240)
 	
-def createInstructionsFromImage(img, filterName="Canny"):
+def createInstructionsFromImage(img, filterName):
 	image_y, image_x = img.shape
 	image_x = float(image_x)
 	image_y = float(image_y)
@@ -33,15 +34,24 @@ def createInstructionsFromImage(img, filterName="Canny"):
 	return  generateInstructions(edges, 240)
 
 def filter(image, filterName):
-	if(filterName=="Canny"):
+	if(filterName.lower()=="canny"):
 		return cv.Canny(image,100,200)
-	elif(filterName=="Custom"):
+	elif(filterName.lower()=="custom"):
+		custom(image)
 		# Add your stuff here Fraser or Michael
-		return image
-		pass
-	print "Filter not found"
+		print "Filter not found"
 	return image
-	
+
+def custom(img):
+	# convert to greyscale (notice spelling :( )
+	gray = cv2.cvtColor(img,cv2.COLOR_BGR2GRAY)
+	# adjust contrast to darken the image, 
+	hist = cv2.equalizeHist(gray)
+	# create the gaussian filter
+	gb = cv2.GaussianBlur(hist, (7,7), 7.0/6.0)
+	# edge detection on blurred increased contrast image 
+	cannyDetection = cv.Canny(gb, 100, 200)
+		
 def generateInstructions(image, colour=255):
 	pixels_visited = {}
 	instructions = []
@@ -129,5 +139,5 @@ def checkDirection(x, y, x_direction, y_direction, instructions, pState, pixels_
 	return pState
 
 if __name__ == '__main__':
-	createInstructionsFromPath("wiener.jpg", "None")
-	# createInstructionsFromPath("/home/teamu/catkin_ws/src/Artista/photos/circle.jpg")
+	createInstructionsFromPath("/home/teamu/catkin_ws/src/Artista/src/fraser.jpg", "Canny")
+	
