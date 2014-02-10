@@ -22,8 +22,8 @@ def createInstructionsFromPath(path, filterName="Canny"):
 	print image_x
 	edges = filter(img, filterName)
 	# cv.imwrite("canny.jpg", edges)
-	print generateInstructions(edges, 240)
-	# return generateInstructions(edges, 240)
+	# print generateInstructions(edges, 240)
+	return generateInstructions(edges, 240)
 	
 def createInstructionsFromImage(img, filterName="Canny"):
 	global image_x
@@ -157,5 +157,5 @@ def check(x_direction, y_direction, image, colour):
 
 if __name__ == '__main__':
 	# createInstructionsFromPath("wiener.jpg", "None")
-	createInstructionsFromPath("wiener.jpg")
-	# createInstructionsFromPath("../photos/circle.jpg", "None")
+	# print createInstructionsFromPath("wiener.jpg")
+	print createInstructionsFromPath("../photos/circle.jpg", "None")
