@@ -18,6 +18,7 @@ CONFIRM=False
 EXECUTE=True
 
 IMAGE_PATH="/home/teamu/catkin_ws/src/Artista/photos/circle.jpg"
+# IMAGE_PATH="/home/teamu/catkin_ws/src/Artista/src/canny.jpg"
 FILTER = "None"
 
 X_DIMENSION = 0.5    # The dimensions of the board we write on
@@ -107,8 +108,9 @@ def draw_plan(path=IMAGE_PATH):
 	poses = []
 	instructions = createInstructionsFromPath(path, FILTER)
 
+
 	for point in instructions:
-		print point
+		# print point
 		pose.position.x = DRAW_X - (point[0] * X_DIMENSION)
 		pose.position.y = DRAW_Y - (point[1] * Y_DIMENSION)
 		pose.position.z = DRAW_Z + (Z_OFFSET*point[2])
