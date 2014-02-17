@@ -125,21 +125,21 @@ def nextInstruction(image, colour):
 	# # #
 	# o #
 #	X # #
-	elif(check(1* scale_Factor, -1 * scale_Factor, image, colour)):
+	elif(check(1 * scale_Factor, -1 * scale_Factor, image, colour)):
 		return 5
 
 	
 	# # #
 #	X o #
 	# # #
-	elif(check(0* scale_Factor, -1 * scale_Factor, image, colour)):
+	elif(check(0 * scale_Factor, -1 * scale_Factor, image, colour)):
 		return 6
 
 	
 #	X # #
 	# o #
 	# # #
-	elif(check(-1* scale_Factor, -1 * scale_Factor, image, colour)):
+	elif(check(-1 * scale_Factor, -1 * scale_Factor, image, colour)):
 		return 7
 	
 	return -1
