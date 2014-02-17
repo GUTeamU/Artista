@@ -86,59 +86,60 @@ def processLine(x, y, image, colour):
 	return
 	
 def nextInstruction(image, colour):
-
+	
+	scale_Factor = 2
 	# X #
 	# o #
 	# # #
-	if(check(-1, 0, image, colour)):
+	if(check(-1 * scale_Factor, 0 * scale_Factor, image, colour)):
 		return 0
 	
 	# # X
 	# o #
 	# # #
-	elif(check(-1, 1, image, colour)):
+	elif(check(-1 * scale_Factor, 1 * scale_Factor, image, colour)):
 		return 1
 
 
 	# # #
 	# o X
 	# # #
-	elif(check(0, 1, image, colour)):
+	elif(check(0 * scale_Factor, 1 * scale_Factor, image, colour)):
 		return 2
 
 	
 	# # #
 	# o #
 	# # X
-	elif(check(1, 1, image, colour)):
+	elif(check(1 * scale_Factor, 1 * scale_Factor, image, colour)):
 		return 3
 
 	
 	# # #
 	# o #
 	# X #
-	elif(check(1, 0, image, colour)):
+	elif(check(1 * scale_Factor, 0 * scale_Factor, image, colour)):
 		return 4
 
 	
 	# # #
 	# o #
 #	X # #
-	elif(check(1, -1, image, colour)):
+	elif(check(1* scale_Factor, -1 * scale_Factor, image, colour)):
 		return 5
 
 	
 	# # #
 #	X o #
 	# # #
-	elif(check(0, -1, image, colour)):
+	elif(check(0* scale_Factor, -1 * scale_Factor, image, colour)):
 		return 6
 
 	
 #	X # #
 	# o #
 	# # #
-	elif(check(-1, -1, image, colour)):
+	elif(check(-1* scale_Factor, -1 * scale_Factor, image, colour)):
 		return 7
 	
 	return -1
