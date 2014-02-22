@@ -20,6 +20,7 @@ def crop_face(image):
         new_face = cropping_image[y:y+height, x:x+width]
         filenames = "face" + str(x) + ".jpg"                             ## eg: filename is "face90.jpg"
         cv.imwrite(filenames,new_face)
+    cv.imshow(image, cropping_image)                                     ## Shows face detected image
     return
 
 def main():
