@@ -20,7 +20,7 @@ def crop_face(image):
         new_face = cropping_image[y:y+height, x:x+width]
         filenames = "face" + str(x) + ".jpg"                             ## eg: filename is "face90.jpg"
         cv.imwrite(filenames,new_face)
-    cv.imshow(image, cropping_image)                                     ## Shows face detected image
+    cv.imshow('image', cropping_image)                                     ## Shows face detected image
     return
 
 def main():
@@ -32,7 +32,7 @@ def main():
     cv.SetCaptureProperty(image_capture,cv.CAP_PROP_FRAME_WIDTH, 640)  ## Limits the height and width
     cv.SetCaptureProperty(image_capture,cv.CAP_PROP_FRAME_HEIGHT, 480) ## to 640 x 480.
     frame = cv.QueryFrame(image_capture)
-    cv.ShowImage('image',frame)
+    cv.imShow('image',frame)
 
     while(1):
         key = cv.WaitKey(100)
