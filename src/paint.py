@@ -17,8 +17,8 @@ VISUALIZE=True
 CONFIRM=False
 EXECUTE=True
 
-IMAGE_PATH="/home/teamu/catkin_ws/src/Artista/photos/circle.jpg"
-# IMAGE_PATH="/home/teamu/catkin_ws/src/Artista/src/canny.jpg"
+# IMAGE_PATH="/home/teamu/catkin_ws/src/Artista/photos/circle.jpg"
+IMAGE_PATH="/home/teamu/catkin_ws/src/Artista/src/canny.jpg"
 FILTER = "None"
 
 X_DIMENSION = 0.5    # The dimensions of the board we write on
