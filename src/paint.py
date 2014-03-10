@@ -17,8 +17,13 @@ VISUALIZE=True
 CONFIRM=False
 EXECUTE=True
 
+<<<<<<< HEAD
 # IMAGE_PATH="/home/teamu/catkin_ws/src/Artista/photos/circle.jpg"
 IMAGE_PATH="/home/teamu/catkin_ws/src/Artista/src/canny.jpg"
+=======
+IMAGE_PATH="/home/clopema/catkin_clopema/src/TP3-Artista/src/circle.jpg"
+# IMAGE_PATH="/home/clopema/catkin_clopema/src/TP3-Artista/src/canny.jpg"
+>>>>>>> 8bb7293ab0fe421f3839a32ad67de30b30de7a21
 FILTER = "None"
 
 X_DIMENSION = 0.5    # The dimensions of the board we write on
@@ -37,7 +42,7 @@ FRAME_ID = 'base_link'
 DRAW_HAND_LINK = 'r2_ee'
 DRAW_X = 0.25
 DRAW_Y = -0.75
-DRAW_Z = 0.729
+DRAW_Z = 0.739
 DRAW_ORIENTATION = Quaternion(*quaternion_from_euler(math.pi, 0, math.pi))
 
 GRAB_X = 0.35
@@ -106,8 +111,7 @@ def draw_plan(path=IMAGE_PATH):
 	pose = Pose()
 	pose.orientation = DRAW_ORIENTATION
 	poses = []
-	instructions = createInstructionsFromPath(path, FILTER)
-
+	instructions = createInstructionsFromPath(IMAGE_PATH, FILTER)
 
 	for point in instructions:
 		# print point
