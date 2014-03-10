@@ -57,7 +57,9 @@ def take_Picture():
 
 
                 sub_face = frame[y:y+h, x:x+w]
-                return sub_face
+                filename ="./pictures/temp.jpg"
+                print "Saving image to: " + filename
+                cv.SaveImage(filename,sub_face)
             # cv.SaveImage(str(ts)+'.jpg', frame)
 
             break

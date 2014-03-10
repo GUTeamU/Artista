@@ -18,7 +18,7 @@ VISUALIZE=True
 CONFIRM=False
 EXECUTE=True
 
-IMAGE_PATH="/home/clopema/catkin_clopema/src/TP3-Artista/src/pictures/temp.jpg"
+IMAGE_PATH="./pictures/"
 
 FILTER = "None"
 
@@ -107,7 +107,7 @@ def draw_plan(path=IMAGE_PATH):
 	pose = Pose()
 	pose.orientation = DRAW_ORIENTATION
 	poses = []
-	
+
 	instructions = createInstructionsFromPath(IMAGE_PATH, FILTER)
 
 	for point in instructions:

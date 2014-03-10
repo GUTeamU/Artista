@@ -1,6 +1,7 @@
 #!/usr/bin/env python
 # import cv2
 import cv2 as cv
+from lineDect import *
 # import pyopencv as cv
 
 # define 0 as lower pen
@@ -8,6 +9,9 @@ import cv2 as cv
 
 image_x = 1000.0
 image_y = 1000.0
+
+source = path + "temp.jpg"
+destination = path + "temp_after.jpg"
 
 pixels_visited = {}
 instructions = []
@@ -17,44 +21,32 @@ cur_y = -1
 def createInstructionsFromPath(path, filterName="Canny"):
 	global image_x
 	global image_y
-	img = cv.imread(path, 0)
-	image_y, image_x = img.shape
-	print image_y
-	print image_x
 	edges = filter(img, filterName)
+	img = cv.imread(destination, 0)
+	image_y, image_x = img.shape
 	# cv.imwrite("canny.jpg", edges)
 	# print generateInstructions(edges, 240)
 	return generateInstructions(edges, 240)
 	
-def createInstructionsFromImage(img, filterName="Canny"):
-	global image_x
-	global image_y
-	image_x, image_y = img.shape
-	image_x = float(image_x)
-	image_y = float(image_y)
+# def createInstructionsFromImage(img, filterName="Canny"):
+# 	global image_x
+# 	global image_y
+# 	image_x, image_y = img.shape
+# 	image_x = float(image_x)
+# 	image_y = float(image_y)
 	
-	edges = filter(img, filterName)
+# 	edges = filter(img, filterName)
 
-	return  generateInstructions(edges, 240)
+# 	return  generateInstructions(edges, 240)
 
 def filter(image, filterName):
 	if(filterName.lower()=="canny"):
 		return cv.Canny(image,100,200)
 	elif(filterName.lower()=="custom"):
-		custom(image)
-		# Add your stuff here Fraser or Michael
+		custom_filter(source, destination)
+		
 	print "Filter not found"
 	return image
-
-def custom(img):
-	# convert to greyscale (notice spelling :( )
-	gray = cv2.cvtColor(img,cv2.COLOR_BGR2GRAY)
-	# adjust contrast to darken the image, 
-	hist = cv2.equalizeHist(gray)
-	# create the gaussian filter
-	gb = cv2.GaussianBlur(hist, (7,7), 7.0/6.0)
-	# edge detection on blurred increased contrast image 
-	cannyDetection = cv.Canny(gb, 100, 200)
 		
 def generateInstructions(image, colour=255):
 	global pixels_visited
