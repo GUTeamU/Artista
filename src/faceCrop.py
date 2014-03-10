@@ -24,6 +24,44 @@ def detect_faces(image):
             
     return faces
 
+def take_Picture():
+    image_capture = cv.CreateCameraCapture(0)
+    cv.SetCaptureProperty(image_capture, cv.CV_CAP_PROP_FRAME_WIDTH, X_RES)
+    cv.SetCaptureProperty(image_capture, cv.CV_CAP_PROP_FRAME_HEIGHT, Y_RES)
+
+    storage = cv.CreateMemStorage()
+    cascade = cv.Load(HAAR_CASCADE_PATH)
+    faces = []
+
+    
+    while (1):
+        frame = cv.QueryFrame(image_capture)
+        cv.ShowImage('image',frame)
+        key = cv.WaitKey(1)
+
+        faces = detect_faces(frame)
+
+        for (x,y,w,h) in faces:
+            cv.Rectangle(frame, (x,y), (x+w,y+h), (0,0,0))
+        key = cv.WaitKey(1)
+        
+        if key == 1048608: ## If the space bar is pressed. Image will be save.
+            print "key pressed"
+            ## start of cropping images
+            print str(key)
+            for f in faces:
+                x = f[0]
+                y = f[1]
+                w = f[2]
+                h = f[3]
+
+
+                sub_face = frame[y:y+h, x:x+w]
+                return sub_face
+            # cv.SaveImage(str(ts)+'.jpg', frame)
+
+            break
+        #new
 
 if __name__ == "__main__":
     image_capture = cv.CreateCameraCapture(0)
@@ -61,7 +99,7 @@ if __name__ == "__main__":
                 filename ="./pictures/" + "face" + str(y)  + ".jpg"
                 print "saving image to: " + filename
                 cv.SaveImage(filename,sub_face)
-            cv.SaveImage(str(ts)+'.jpg', frame)
+            # cv.SaveImage(str(ts)+'.jpg', frame)
 
             break
         #new

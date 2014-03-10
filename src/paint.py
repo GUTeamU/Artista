@@ -11,19 +11,15 @@ from geometry_msgs.msg import *
 from rospy.numpy_msg import numpy_msg
 
 from ImageProcessing import *
+from faceCrop import *
 
 
 VISUALIZE=True
 CONFIRM=False
 EXECUTE=True
 
-<<<<<<< HEAD
-# IMAGE_PATH="/home/teamu/catkin_ws/src/Artista/photos/circle.jpg"
-IMAGE_PATH="/home/teamu/catkin_ws/src/Artista/src/canny.jpg"
-=======
-IMAGE_PATH="/home/clopema/catkin_clopema/src/TP3-Artista/src/circle.jpg"
-# IMAGE_PATH="/home/clopema/catkin_clopema/src/TP3-Artista/src/canny.jpg"
->>>>>>> 8bb7293ab0fe421f3839a32ad67de30b30de7a21
+IMAGE_PATH="/home/clopema/catkin_clopema/src/TP3-Artista/src/pictures/temp.jpg"
+
 FILTER = "None"
 
 X_DIMENSION = 0.5    # The dimensions of the board we write on
@@ -111,6 +107,7 @@ def draw_plan(path=IMAGE_PATH):
 	pose = Pose()
 	pose.orientation = DRAW_ORIENTATION
 	poses = []
+	
 	instructions = createInstructionsFromPath(IMAGE_PATH, FILTER)
 
 	for point in instructions:
