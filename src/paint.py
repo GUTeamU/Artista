@@ -102,11 +102,11 @@ def draw_plan(path=IMAGE_PATH):
 	pose = Pose()
 	pose.orientation = DRAW_ORIENTATION
 	poses = []
-
-	instructions = createInstructionsFromPath(IMAGE_PATH, FILTER)
+	
+	take_Picture(IMAGE_PATH)
+	instructions = createInstructionsFromPath(IMAGE_PATH)
 
 	for point in instructions:
-		# print point
 		pose.position.x = DRAW_X - (point[0] * X_DIMENSION)
 		pose.position.y = DRAW_Y - (point[1] * Y_DIMENSION)
 		pose.position.z = DRAW_Z + (Z_OFFSET*point[2])
