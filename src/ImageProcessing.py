@@ -10,6 +10,8 @@ import cv2 as cv
 image_x = 1000.0
 image_y = 1000.0
 
+scale_x = 2
+scale_y = 2
 
 pixels_visited = {}
 instructions = []
@@ -35,7 +37,7 @@ def preprocessedCreateInstructions(path):
 	global image_x
 	global image_y
 	
-	source = path + "temp.jpg"
+	source = path + "temp_after.jpg"
 	
 	img = cv.imread(source, 0)
 	image_y, image_x = img.shape
@@ -93,7 +95,7 @@ def processLine(x, y, image, colour):
 	
 def nextInstruction(image, colour):
 	
-	scale_Factor = 2
+	scale_Factor = 1
 	# X #
 	# o #
 	# # #
@@ -172,8 +174,8 @@ def check(x_direction, y_direction, image, colour):
 	return False
 
 def draw(point, pen):
-	pen.setx(point[0] * image_x)
-	pen.sety(point[1] * image_y)
+	pen.setx(-point[0] * image_x * scale_x)
+	pen.sety(-point[1] * image_y * scale_y)
 	if(point[2]<0.5):
 		pen.pendown()
 	else:

@@ -1,7 +1,7 @@
 import cv
 import time
 
-HAAR_CASCADE_PATH = "./haarcascade_frontalface_alt.xml"
+HAAR_CASCADE_PATH = "/home/clopema/catkin_clopema/src/TP3-Artista/haarcascade_frontalface_alt.xml"
 X_RES = 640
 Y_RES = 480
 X_OFFSET = (int)( 0.1 * X_RES)

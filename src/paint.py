@@ -36,7 +36,7 @@ FRAME_ID = 'base_link'
 DRAW_HAND_LINK = 'r2_ee'
 DRAW_X = 0.25
 DRAW_Y = -0.75
-DRAW_Z = 0.739
+DRAW_Z = 0.747
 DRAW_ORIENTATION = Quaternion(*quaternion_from_euler(math.pi, 0, math.pi))
 
 GRAB_X = 0.35
@@ -103,8 +103,8 @@ def draw_plan(path=IMAGE_PATH):
 	pose.orientation = DRAW_ORIENTATION
 	poses = []
 	
-	take_Picture(IMAGE_PATH)
-	instructions = preprocessedInstructionsFromPath(IMAGE_PATH)
+#	take_Picture(IMAGE_PATH)
+	instructions = preprocessedCreateInstructions(IMAGE_PATH)
 
 	for point in instructions:
 		pose.position.x = DRAW_X - (point[0] * X_DIMENSION)
