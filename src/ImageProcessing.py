@@ -171,8 +171,28 @@ def check(x_direction, y_direction, image, colour):
 	pixels_visited[(cur_x + x_direction, cur_y + y_direction)] = True
 	return False
 
+def draw(point, pen):
+	pen.setx(point[0] * image_x)
+	pen.sety(point[1] * image_y)
+	if(point[2]<0.5):
+		pen.pendown()
+	else:
+		pen.penup()
+	
 
 if __name__ == '__main__':
-	# createInstructionsFromPath("wiener.jpg", "None")
-	# print createInstructionsFromPath("wiener.jpg")
-	print createInstructionsFromPath("../photos/circle.jpg", "None")
+	
+	import turtle
+	wn = turtle.Screen()
+	wn.screensize(image_x, image_y)
+	pen = turtle.Turtle() 
+	pen.shape("circle")
+	pen.turtlesize(0.1, 0.1)
+	
+	# instructions = createInstructionsFromPath("./pictures/")
+	instructions = testCreateInstructions("./pictures/")
+	# print instructions
+	
+	for point in instructions:
+		draw(point, pen)
+	wn.exitonclick()
