@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 # import cv2
 import cv2 as cv
-from lineDect import *
+# from lineDect import *
 # import pyopencv as cv
 
 # define 0 as lower pen
