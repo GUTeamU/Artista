@@ -20,8 +20,6 @@ EXECUTE=True
 
 IMAGE_PATH="./pictures/"
 
-FILTER = "None"
-
 X_DIMENSION = 0.5    # The dimensions of the board we write on
 Y_DIMENSION = 0.5
 
@@ -46,9 +44,6 @@ GRAB_Y = -0.65
 GRAB_Z = 0.75 + Z_OFFSET
 
 GRAB_ORIENTATION_Y = 1
-
-# define 0 as lower pen
-# define 1 as raise pen
 
 def grab_plan(sq):
 	
