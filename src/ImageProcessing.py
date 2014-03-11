@@ -54,14 +54,13 @@ def testCreateInstructions(path):
 
 # 	return  generateInstructions(edges, 240)
 
-def filter(image, filterName):
-	if(filterName.lower()=="canny"):
-		return cv.Canny(image,100,200)
-	elif(filterName.lower()=="custom"):
-		custom_filter(source, destination)
+# def filter(image, filterName):
+
+# 	elif(filterName.lower()=="custom"):
+# 		custom_filter(source, destination)
 		
-	print "Filter not found"
-	return image
+# 	print "Filter not found"
+# 	return image
 		
 def generateInstructions(image, colour=255):
 	global pixels_visited
