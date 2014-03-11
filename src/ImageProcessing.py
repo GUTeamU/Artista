@@ -10,23 +10,38 @@ import cv2 as cv
 image_x = 1000.0
 image_y = 1000.0
 
-source = path + "temp.jpg"
-destination = path + "temp_after.jpg"
 
 pixels_visited = {}
 instructions = []
 cur_x = -1
 cur_y = -1
 
-def createInstructionsFromPath(path, filterName="Canny"):
+def createInstructionsFromPath(path):
 	global image_x
 	global image_y
-	edges = filter(img, filterName)
-	img = cv.imread(destination, 0)
-	image_y, image_x = img.shape
-	# cv.imwrite("canny.jpg", edges)
-	# print generateInstructions(edges, 240)
+	
+	source = path + "temp.jpg"
+	destination = path + "temp_after.jpg"
+	
+	custom_filter(source, destination)
+	
+	img = cv.imread(source, 0)
+	edges = cv.imread(destination, 0)
+	image_y, image_x = edges.shape
+	
 	return generateInstructions(edges, 240)
+
+def testCreateInstructions(path):
+	global image_x
+	global image_y
+	
+	source = path + "temp.jpg"
+	
+	img = cv.imread(source, 0)
+	image_y, image_x = img.shape
+	
+	return generateInstructions(img, 240)
+
 	
 # def createInstructionsFromImage(img, filterName="Canny"):
 # 	global image_x
