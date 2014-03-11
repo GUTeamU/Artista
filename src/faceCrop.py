@@ -24,7 +24,7 @@ def detect_faces(image):
             
     return faces
 
-def take_Picture():
+def take_Picture(path):
     image_capture = cv.CreateCameraCapture(0)
     cv.SetCaptureProperty(image_capture, cv.CV_CAP_PROP_FRAME_WIDTH, X_RES)
     cv.SetCaptureProperty(image_capture, cv.CV_CAP_PROP_FRAME_HEIGHT, Y_RES)
@@ -57,7 +57,7 @@ def take_Picture():
 
 
                 sub_face = frame[y:y+h, x:x+w]
-                filename ="./pictures/temp.jpg"
+                filename = path + "temp.jpg"
                 print "Saving image to: " + filename
                 cv.SaveImage(filename,sub_face)
             # cv.SaveImage(str(ts)+'.jpg', frame)
