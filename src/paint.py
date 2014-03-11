@@ -104,7 +104,7 @@ def draw_plan(path=IMAGE_PATH):
 	poses = []
 	
 	take_Picture(IMAGE_PATH)
-	instructions = createInstructionsFromPath(IMAGE_PATH)
+	instructions = preprocessedInstructionsFromPath(IMAGE_PATH)
 
 	for point in instructions:
 		pose.position.x = DRAW_X - (point[0] * X_DIMENSION)

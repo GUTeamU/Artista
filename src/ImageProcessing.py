@@ -31,7 +31,7 @@ def createInstructionsFromPath(path):
 	
 	return generateInstructions(edges, 240)
 
-def testCreateInstructions(path):
+def preprocessedCreateInstructions(path):
 	global image_x
 	global image_y
 	
@@ -190,7 +190,7 @@ if __name__ == '__main__':
 	pen.turtlesize(0.1, 0.1)
 	
 	# instructions = createInstructionsFromPath("./pictures/")
-	instructions = testCreateInstructions("./pictures/")
+	instructions = preprocessedCreateInstructions("./pictures/")
 	# print instructions
 	
 	for point in instructions:
