@@ -190,6 +190,7 @@ if __name__ == '__main__':
 	pen = turtle.Turtle() 
 	pen.shape("circle")
 	pen.turtlesize(0.1, 0.1)
+	pen.penup()
 	
 	# instructions = createInstructionsFromPath("./pictures/")
 	instructions = preprocessedCreateInstructions("./pictures/")
