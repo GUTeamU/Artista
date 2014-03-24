@@ -194,7 +194,7 @@ if __name__ == '__main__':
 	
 	# instructions = createInstructionsFromPath("./pictures/")
 	instructions = preprocessedCreateInstructions("./pictures/")
-	# print instructions
+	print instructions
 	
 	for point in instructions:
 		draw(point, pen)
